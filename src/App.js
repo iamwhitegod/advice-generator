@@ -4,13 +4,28 @@ import pauseDesktop from "./images/pattern-divider-desktop.svg";
 import dice from "./images/icon-dice.svg";
 
 function App() {
+  const [advice, setAdvice] = useState({});
+
+  const getAdvice = async () => {
+    try {
+      const res = await fetch(`https://api.adviceslip.com/advice`);
+      const data = await res.json();
+      const { slip } = data;
+
+      setAdvice(slip);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getAdvice();
+  }, []);
+
   return (
     <div className="container">
       <h1>Advice</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum,
-        maiores.
-      </p>
+      <p>{advice.advice}</p>
 
       <picture>
         <source media="(min-width: 768px)" srcSet={pauseDesktop} />
@@ -18,7 +33,7 @@ function App() {
       </picture>
 
       <div>
-        <button>
+        <button onClick={getAdvice}>
           <img src={dice} alt="" />
         </button>
       </div>
